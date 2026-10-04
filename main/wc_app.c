@@ -37,19 +37,21 @@ static bool start_round(void){
  if(progress_blocked){error("读取进度失败，请在设置确认重置",WC_HOME);return false;}
  unsigned char old[offsetof(wc_state_t,words)];memcpy(old,&state,sizeof(old));
  bool ok=wc_start(&state)&&persist();if(!ok)memcpy(&state,old,sizeof(old));
- if(ok){if(state.revealed && bsp_lvgl_lock(1000)){view.read_pages=wc_ui_definition_pages(state.queue[state.cursor]);bsp_lvgl_unlock();}go(state.revealed?(view.read_pages>1?WC_READ:WC_BACK):WC_FRONT);}return ok;
+ if(ok){if(state.revealed && bsp_lvgl_lock(1000)){view.read_pages=wc_ui_definition_pages(state.queue[state.cursor]);bsp_lvgl_unlock();}go(state.revealed?(view.read_pages>1?WC_READ:WC_BACK):WC_FRONT);if(state.revealed&&(!audio_ready||!wc_audio_play(state.queue[state.cursor],state.volume)))error("发音资源或设备不可用",view.page);}return ok;
 }
 static void rate(bool familiar){
  unsigned at=state.queue[state.cursor];wc_progress_t old=state.words[at];uint8_t cursor=state.cursor,recognized=state.recognized,again=state.again,revealed=state.revealed;uint32_t round=state.round;
  if(!wc_rate(&state,familiar))return;
  if(!persist()){state.words[at]=old;state.cursor=cursor;state.recognized=recognized;state.again=again;state.revealed=revealed;state.round=round;return;}
  go(state.cursor==state.length?WC_FINISH:WC_FRONT);
- if(audio_ready&&!wc_audio_feedback(familiar,state.volume))error("声音未完成，请重试",view.page);
+ if(familiar&&audio_ready&&!wc_audio_feedback(true,state.volume))error("声音未完成，请重试",view.page);
 }
 static void reveal(void){
- state.revealed=1;if(!persist()){state.revealed=0;return;}
+ if(!wc_begin_relearn(&state))return;
+ if(!persist()){state.revealed=0;return;}
  if(bsp_lvgl_lock(1000)){view.read_pages=wc_ui_definition_pages(state.queue[state.cursor]);bsp_lvgl_unlock();}
  go(view.read_pages>1?WC_READ:WC_BACK);
+ if(!audio_ready||!wc_audio_relearn(state.queue[state.cursor],state.volume))error("发音资源或设备不可用",view.page);
 }
 static void play_word(void){if(!audio_ready || !wc_audio_play(state.queue[state.cursor],state.volume))error("发音资源或设备不可用",view.page);}
 static void dispatch(bsp_btn_t b,bsp_btn_ev_t ev){
@@ -60,9 +62,9 @@ static void dispatch(bsp_btn_t b,bsp_btn_ev_t ev){
  case WC_HOME:
  case WC_SETTINGS:{unsigned max=2;if(up&&view.selection)view.selection--;if(down&&view.selection<max)view.selection++;
   if(ok){if(view.page==WC_HOME){if(view.selection==0){start_round();return;}go(view.selection==1?WC_PROGRESS:WC_SETTINGS);view.selection=0;}else {original_volume=state.volume;go(view.selection==0?WC_VOLUME:view.selection==1?WC_RESET:WC_ABOUT);}}break;}
- case WC_FRONT:if(up)play_word();if(ok)reveal();return;
- case WC_BACK:if(ok)rate(true);else if(down)rate(false);else if(up)play_word();return;
- case WC_READ:if(up&&view.read_page)view.read_page--;if(down&&view.read_page+1<view.read_pages)view.read_page++;if(ok){go(WC_BACK);return;}break;
+ case WC_FRONT:if(ok)rate(true);else if(down)reveal();else if(up)play_word();return;
+ case WC_BACK:if(ok)rate(false);else if(up)play_word();return;
+ case WC_READ:if(up&&view.read_page)view.read_page--;if(down&&view.read_page+1<view.read_pages)view.read_page++;if(ok){rate(false);return;}break;
  case WC_FINISH:if(ok)start_round();return;
  case WC_VOLUME:{if(up&&state.volume<100)state.volume+=5;if(down&&state.volume>=5)state.volume-=5;if(ok){if(persist())go(WC_SETTINGS);else state.volume=original_volume;return;}break;}
  case WC_RESET:if(ok){wc_state_t *old=malloc(sizeof(state));if(!old){error("内部内存不足",WC_RESET);return;}*old=state;wc_init(&state,wc_word_ids,WC_WORD_COUNT,WC_CORPUS_ID);state.volume=old->volume;if(persist()){progress_blocked=false;view.selection=0;go(WC_HOME);}else state=*old;free(old);}return;

@@ -26,4 +26,11 @@ int main(void){uint32_t ids[]={10,20,30};bool migrated;wc_init(&a,ids,3,77);asse
  wc_init(&a,ids,3,77);wc_start(&a);wc_rate(&a,true);a.volume=30;a.reserved[0]=0;assert(wc_store_save(&a)==ESP_OK);
  reboot(ids,3,77);assert(wc_store_load(&b,&migrated)==ESP_OK && b.volume==100 && b.reserved[0]==1 && b.cursor==1 && b.words[0].seen);
  b.volume=65;assert(wc_store_save(&b)==ESP_OK);reboot(ids,3,77);assert(wc_store_load(&b,&migrated)==ESP_OK && b.volume==65);
+ // Relearning choice survives reboot; failed completion keeps the pending card.
+ assert(wc_begin_relearn(&b));assert(wc_store_save(&b)==ESP_OK);
+ reboot(ids,3,77);assert(wc_store_load(&b,&migrated)==ESP_OK&&b.revealed&&b.cursor==1);
+ assert(wc_rate(&b,false));fail_commit=1;assert(wc_store_save(&b)==ESP_FAIL);fail_commit=0;
+ reboot(ids,3,77);assert(wc_store_load(&b,&migrated)==ESP_OK&&b.revealed&&b.cursor==1);
+ assert(wc_rate(&b,false));assert(wc_store_save(&b)==ESP_OK);
+ reboot(ids,3,77);assert(wc_store_load(&b,&migrated)==ESP_OK&&!b.revealed&&b.cursor==2&&b.again==1);
  fail_set=1;assert(wc_store_save(&b)==ESP_FAIL);puts("wc_store: PASS");}

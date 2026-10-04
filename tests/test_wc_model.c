@@ -14,4 +14,16 @@ int main(void){uint32_t ids[50];for(int i=0;i<50;i++)ids[i]=i+1;
  wc_start(&s);unsigned at=s.queue[0];wc_rate(&s,false);assert(s.words[at].stage==0 && s.words[at].due==s.round+1);
  old=s;wc_init(&s,ids,50,999);assert(wc_migrate(&s,&old));assert(s.length==0 && s.round==old.round && s.words[at].stage==0);
  s.length=2;s.queue[0]=0;s.queue[1]=0;assert(!wc_valid(&s));s=old;s.words[0].stage=6;assert(!wc_valid(&s));
+ /* Pending relearn survives restoration and cannot become known. */
+ wc_init(&s,ids,50,123);assert(wc_start(&s));
+ assert(wc_begin_relearn(&s));assert(!wc_begin_relearn(&s));
+ assert(s.cursor==0&&s.again==0&&s.revealed&&wc_valid(&s));
+ old=s;wc_init(&s,ids,50,123);assert(wc_migrate(&s,&old));
+ assert(wc_start(&s)&&s.revealed&&s.cursor==0);
+ assert(wc_rate(&s,true));assert(s.again==1&&s.recognized==0&&s.cursor==1);
+ assert(s.words[0].stage==0&&s.words[0].due==2&&!s.revealed);
+ while(s.cursor+1<s.length)assert(wc_rate(&s,true));
+ assert(wc_begin_relearn(&s));assert(wc_rate(&s,false));
+ assert(s.round==2&&s.again==2&&s.cursor==s.length);
+ assert(!wc_begin_relearn(&s));
  assert(wc_crc32("123456789",9)==0xcbf43926u);puts("wc_model: PASS");return 0;}

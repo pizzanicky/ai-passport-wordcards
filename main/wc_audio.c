@@ -61,7 +61,7 @@ static esp_err_t play(const request_t *r){
  if(e==ESP_OK&&played)ESP_LOGI("word_audio","PCM bytes=%u stack remaining=%u",decoded,(unsigned)uxTaskGetStackHighWaterMark(NULL));
  free(encoded);free(pcm);esp_audio_simple_dec_close(dec);return e;
 }
-static void audio_worker(void *arg){(void)arg;request_t r;for(;;){if(xQueueReceive(requests,&r,portMAX_DELAY)!=pdTRUE)continue;xSemaphoreTake(owner,portMAX_DELAY);if(r.generation==atomic_load(&generation)){esp_err_t e=r.kind?feedback(&r):play(&r);if(e!=ESP_OK)atomic_store(&last_error,e);bsp_audio_sleep();}xSemaphoreGive(owner);}}
+static void audio_worker(void *arg){(void)arg;request_t r;for(;;){if(xQueueReceive(requests,&r,portMAX_DELAY)!=pdTRUE)continue;xSemaphoreTake(owner,portMAX_DELAY);if(r.generation==atomic_load(&generation)){esp_err_t e=r.kind?feedback(&r):play(&r);if(e==ESP_OK&&r.kind==3&&r.generation==atomic_load(&generation))e=play(&r);if(e!=ESP_OK)atomic_store(&last_error,e);bsp_audio_sleep();}xSemaphoreGive(owner);}}
 esp_err_t wc_audio_init(void){
  audio_partition=esp_partition_find_first(ESP_PARTITION_TYPE_DATA,0x40,"wordaudio");
  audio_first=esp_partition_find_first(ESP_PARTITION_TYPE_DATA,0x41,"audioa");
@@ -80,6 +80,7 @@ esp_err_t wc_audio_init(void){
  return ESP_OK;
 }
 bool wc_audio_play(uint16_t word,uint8_t volume){if(!requests||word>=WC_WORD_COUNT)return false;request_t r={.word=word,.volume=volume,.generation=atomic_fetch_add(&generation,1)+1};return xQueueOverwrite(requests,&r)==pdPASS;}
+bool wc_audio_relearn(uint16_t word,uint8_t volume){if(!requests||word>=WC_WORD_COUNT)return false;request_t r={.word=word,.volume=volume,.kind=3,.generation=atomic_fetch_add(&generation,1)+1};return xQueueOverwrite(requests,&r)==pdPASS;}
 bool wc_audio_feedback(bool familiar,uint8_t volume){if(!requests)return false;request_t r={.kind=familiar?1:2,.volume=volume,.generation=atomic_fetch_add(&generation,1)+1};return xQueueOverwrite(requests,&r)==pdPASS;}
 bool wc_audio_stop(void){if(!owner)return true;atomic_fetch_add(&generation,1);xQueueReset(requests);if(xSemaphoreTake(owner,pdMS_TO_TICKS(1000))!=pdTRUE)return false;xSemaphoreGive(owner);return true;}
 esp_err_t wc_audio_take_error(void){return atomic_exchange(&last_error,ESP_OK);}

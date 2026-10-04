@@ -39,8 +39,13 @@ bool wc_start(wc_state_t *s) {
  if(!s->length)while(s->length<20 && (index=earliest(s,false))>=0)s->queue[s->length++]=(uint16_t)index;
  return s->length>0;
 }
+bool wc_begin_relearn(wc_state_t *s) {
+ if(!wc_valid(s)||s->cursor>=s->length||s->revealed)return false;
+ s->revealed=1;return true;
+}
 bool wc_rate(wc_state_t *s,bool familiar) {
  if(!wc_valid(s) || s->cursor>=s->length || s->round>=UINT32_MAX-32)return false;
+ if(s->revealed)familiar=false; /* Strengthening never promotes familiarity. */
  wc_progress_t *p=&s->words[s->queue[s->cursor]];p->seen=1;
  if(familiar){if(p->stage<5)p->stage++;p->due=s->round+(1u<<(p->stage-1));s->recognized++;}
  else {p->stage=0;p->due=s->round+1;s->again++;}

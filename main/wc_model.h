@@ -15,6 +15,7 @@ void wc_init(wc_state_t *s, const uint32_t *ids, uint16_t n, uint32_t corpus);
 void wc_upgrade_defaults(wc_state_t *s);
 bool wc_valid(const wc_state_t *s);
 bool wc_start(wc_state_t *s);
+bool wc_begin_relearn(wc_state_t *s);
 bool wc_rate(wc_state_t *s, bool familiar);
 uint16_t wc_due_count(const wc_state_t *s);
 uint16_t wc_seen_count(const wc_state_t *s);

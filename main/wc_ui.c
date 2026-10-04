@@ -28,9 +28,8 @@ static void divider(int y){box(screen,20,y,200,1,SLATE,0);}
 static void portrait(int x,int y,const lv_image_dsc_t *src){lv_obj_t *o=lv_image_create(screen);lv_image_set_src(o,src);lv_obj_set_pos(o,x,y);}
 static void footer(wc_page_t page){
  divider(249);
- if(page==WC_FRONT){text(20,259,90,"↑ 发音",16,INK);text(112,259,110,"OK 看释义",16,INK);}
- else if(page==WC_BACK){box(screen,17,257,89,27,LIGHT,4);box(screen,124,257,98,27,PINK,4);text(23,257,80,"OK 认识",18,INK);text(133,257,80,"↓ 再练",18,INK);text(20,287,92,"↑ 发音",16,INK);text(124,287,98,"长按OK返回",16,INK);return;}
- else {text(20,259,100,"↑↓ 翻页",16,INK);text(126,259,94,"OK 评价",16,INK);}
+ if(page==WC_FRONT){box(screen,17,257,89,27,LIGHT,4);box(screen,124,257,98,27,PINK,4);text(23,257,80,"OK 认识",18,INK);text(133,257,80,"↓ 再练",18,INK);text(20,287,92,"↑ 发音",16,INK);text(124,287,98,"长按OK返回",16,INK);return;}
+ else {text(20,259,110,page==WC_READ?"↑↓ 翻页":"↑ 发音",16,INK);text(130,259,90,"OK 下一词",16,INK);}
  text(43,287,175,"长按 OK 返回首页",16,INK);
 }
 static void title(const char *t){text(20,20,178,t,24,INK);}
