@@ -1,0 +1,12 @@
+build/
+sdkconfig
+sdkconfig.old
+managed_components/
+.agents/
+.venv/
+.cache/
+__pycache__/
+*.pyc
+.DS_Store
+tools/node_modules/
+:memory:.ses

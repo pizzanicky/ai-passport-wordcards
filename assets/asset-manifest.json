@@ -1,0 +1,38 @@
+{
+  "corpus_id": 1156457013,
+  "count": 3676,
+  "images": {
+    "home": {
+      "size": [
+        92,
+        117
+      ],
+      "bytes": 21528
+    },
+    "front": {
+      "size": [
+        46,
+        55
+      ],
+      "bytes": 5060
+    },
+    "finish": {
+      "size": [
+        67,
+        82
+      ],
+      "bytes": 10988
+    }
+  },
+  "font_sizes": [
+    16,
+    18,
+    20,
+    22,
+    24,
+    26,
+    30
+  ],
+  "missing_glyphs": {},
+  "character_sha256": "86281d8ca1544869a4a2d2ad414c7ad66d057a92fdb987c8c7923e3f8a63b2a6"
+}

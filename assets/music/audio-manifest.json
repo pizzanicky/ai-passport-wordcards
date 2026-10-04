@@ -1,0 +1,19 @@
+{
+  "engine": "piper-tts 1.8.0",
+  "voice": "en_GB-alba-medium",
+  "model_sha256": "401369c4a81d09fdd86c32c5c864440811dbdcc66466cde2d64f7133a66ad03b",
+  "bitrate_kbps": 16,
+  "sample_rate": 16000,
+  "channels": 1,
+  "count": 3676,
+  "bytes": 5646312,
+  "sha256": "27e706156b149a097ecd132b374232a6d663b69b46e7a0306dfd0b4521377cf4",
+  "listening_status": "NOT_AUDITED",
+  "overrides": {
+    "Dr": "doctor",
+    "mm": "millimetre",
+    "CD": "C D",
+    "dvd": "D V D",
+    "vcd": "V C D"
+  }
+}

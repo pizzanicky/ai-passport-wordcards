@@ -1,0 +1,6 @@
+piper-tts==1.8.0
+Pillow==12.3.0
+fonttools==4.66.1
+requests==2.34.2
+numpy==2.5.3
+onnxruntime==1.30.0
