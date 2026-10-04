@@ -20,7 +20,7 @@ Generated screenshots: `build/ui-preview/`. Validated app-only merged image: `bu
 
 Definitions, IPA and individual recordings have **not** received full editorial/listening review. ECDICT high-school tags are candidate selection, not a verified syllabus list. Data provenance and Piper voice/model license chain must be checked before redistribution. See [release preparation](docs/product/RELEASE.md) and [handoff](docs/product/HANDOFF.md).
 
-This repository was initialized independently with no upstream Git history. Reusable BSP files originate from the MIT-licensed snapshot recorded in [UPSTREAM](UPSTREAM); attribution is retained. It currently has no remote and has not been published on GitHub.
+This repository was initialized independently with no upstream Git history. Reusable BSP files originate from the MIT-licensed snapshot recorded in [UPSTREAM](UPSTREAM); attribution is retained. The public source repository is https://github.com/pizzanicky/ai-passport-wordcards. Source publication does not indicate a completed firmware release or FoloToy platform submission.
 
 Code: MIT; Noto fonts: OFL; dictionary/model/audio/character assets have separate terms described in [assets](assets/README.md). Do not assume the code license covers all assets. Flashing requires explicit authorization for the target, exact image and data impact; see [device procedure](docs/development/ai-guide.md).
 
