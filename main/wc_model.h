@@ -12,6 +12,7 @@ typedef struct {
  wc_progress_t words[WC_MAX_WORDS];
 } wc_state_t;
 void wc_init(wc_state_t *s, const uint32_t *ids, uint16_t n, uint32_t corpus);
+void wc_upgrade_defaults(wc_state_t *s);
 bool wc_valid(const wc_state_t *s);
 bool wc_start(wc_state_t *s);
 bool wc_rate(wc_state_t *s, bool familiar);

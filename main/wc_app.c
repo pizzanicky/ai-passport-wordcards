@@ -44,6 +44,7 @@ static void rate(bool familiar){
  if(!wc_rate(&state,familiar))return;
  if(!persist()){state.words[at]=old;state.cursor=cursor;state.recognized=recognized;state.again=again;state.revealed=revealed;state.round=round;return;}
  go(state.cursor==state.length?WC_FINISH:WC_FRONT);
+ if(audio_ready&&!wc_audio_feedback(familiar,state.volume))error("声音未完成，请重试",view.page);
 }
 static void reveal(void){
  state.revealed=1;if(!persist()){state.revealed=0;return;}
@@ -81,7 +82,7 @@ static void app_worker(void *arg){
   int64_t now=esp_timer_get_time();
   if(!sleeping&&now-last>=60000000){wc_audio_stop();bsp_display_backlight(0);sleeping=true;}
   if(now-battery_at>=30000000){battery_at=now;view.battery=bsp_battery_soc();if(!sleeping)render();}
-  esp_err_t audio_error=wc_audio_take_error();if(audio_error!=ESP_OK){ESP_LOGW("wordcards","audio: %s",esp_err_to_name(audio_error));if(!sleeping)error("发音未完成，请重试",view.page);}
+  esp_err_t audio_error=wc_audio_take_error();if(audio_error!=ESP_OK){ESP_LOGW("wordcards","audio: %s",esp_err_to_name(audio_error));if(!sleeping)error("声音未完成，请重试",view.page);}
  }
 }
 void app_main(void){

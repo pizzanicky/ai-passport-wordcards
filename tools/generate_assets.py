@@ -43,7 +43,7 @@ converter=os.environ.get('LV_FONT_CONV',str(ROOT/'tools/node_modules/lv_font_con
 if not node or not Path(converter).exists():raise RuntimeError('Install Node.js and run npm ci --prefix tools before generating fonts')
 missing={}
 for size in [16,18,20,22,24,26,30]:
- title_chars={22:'认识再练0123456789',24:'本轮完成学习进度设置重置记录版本与词库需要处理随身卡发音量0123456789',26:'随身词卡0123456789词',30:'0123456789%'}
+ title_chars={22:'认识再练0123456789',24:'本轮完成学习进度设置重置记录版本与词库需要处理随身卡发声音量0123456789',26:'随身词卡0123456789词',30:'0123456789%'}
  cnchars=''.join(sorted(set(chinese if size==20 else title_chars.get(size,UI))));enchars=''.join(sorted(set(latin if size==16 else word_chars+ASCII+title_chars.get(size,UI))))
  cnmap=TTFont(ROOT/'.cache/NotoSansSC-Regular.ttf').getBestCmap();enmap=TTFont(ROOT/'.cache/NotoSans-Regular.ttf').getBestCmap()
  bad=[c for c in set(cnchars+enchars) if ord(c) not in cnmap and ord(c) not in enmap and not c.isspace()]

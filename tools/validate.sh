@@ -25,6 +25,7 @@ run_static_checks() {
     python3 tests/test_verify_firmware.py
     python3 tests/test_archive_firmware.py
     python3 tests/test_install_ranges.py
+    python3 tests/check_feedback.py
     python3 tests/check_assets.py
     if [ -d managed_components/lvgl__lvgl ]; then
         cmake -S tests/ui_host -B .cache/ui-host

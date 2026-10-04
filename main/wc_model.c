@@ -2,9 +2,10 @@
 #include <string.h>
 #include <limits.h>
 void wc_init(wc_state_t *s,const uint32_t *ids,uint16_t n,uint32_t corpus) {
- memset(s,0,sizeof(*s));s->round=1;s->volume=30;s->corpus=corpus;s->count=n<=WC_MAX_WORDS?n:0;
+ memset(s,0,sizeof(*s));s->round=1;s->volume=100;s->reserved[0]=1;s->corpus=corpus;s->count=n<=WC_MAX_WORDS?n:0;
  for(unsigned i=0;i<s->count;i++)s->words[i].id=ids[i];
 }
+void wc_upgrade_defaults(wc_state_t *s){if(s->reserved[0]==0){s->volume=100;s->reserved[0]=1;}}
 bool wc_valid(const wc_state_t *s) {
  if(!s->round || s->round>UINT32_MAX-32 || !s->count || s->count>WC_MAX_WORDS || s->length>20 || s->cursor>s->length || s->volume>100 || s->revealed>1 || s->recognized+s->again!=s->cursor)return false;
  for(unsigned i=0;i<s->count;i++)if(s->words[i].stage>5 || s->words[i].seen>1 || !s->words[i].id)return false;
@@ -53,7 +54,7 @@ uint16_t wc_familiar_count(const wc_state_t *s){uint16_t n=0;for(unsigned i=0;i<
 uint32_t wc_crc32(const void *data,unsigned n){const uint8_t *p=data;uint32_t c=~0u;while(n--){c^=*p++;for(unsigned j=0;j<8;j++)c=(c>>1)^(0xedb88320u&-(c&1));}return ~c;}
 bool wc_migrate(wc_state_t *s,const wc_state_t *old) {
  if(!wc_valid(old)||!wc_valid(s))return false;
- unsigned found=0;s->round=old->round;s->volume=old->volume;
+ unsigned found=0;s->round=old->round;s->volume=old->volume;s->reserved[0]=old->reserved[0];wc_upgrade_defaults(s);
  for(unsigned i=0;i<s->count;i++)for(unsigned j=0;j<old->count;j++)if(s->words[i].id==old->words[j].id){s->words[i]=old->words[j];found++;break;}
  if(old->corpus==s->corpus && old->count==s->count){
   memcpy(s->queue,old->queue,sizeof(s->queue));s->length=old->length;s->cursor=old->cursor;s->recognized=old->recognized;s->again=old->again;s->revealed=old->revealed;

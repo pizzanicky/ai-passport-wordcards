@@ -22,4 +22,8 @@ int main(void){uint32_t ids[]={10,20,30};bool migrated;wc_init(&a,ids,3,77);asse
  slots[0][8]^=1;reboot(ids,3,77);assert(wc_store_load(&b,&migrated)==ESP_ERR_INVALID_CRC);
  memset(sizes,0,sizeof(sizes));wc_init(&a,ids,3,77);wc_store_open();wc_start(&a);wc_rate(&a,true);assert(wc_store_save(&a)==ESP_OK);
  uint32_t next[]={30,10,40};reboot(next,3,88);assert(wc_store_load(&b,&migrated)==ESP_OK && migrated && b.words[1].seen && b.length==0);
+ // Upgrade the old default once, retaining the learning state and later user settings.
+ wc_init(&a,ids,3,77);wc_start(&a);wc_rate(&a,true);a.volume=30;a.reserved[0]=0;assert(wc_store_save(&a)==ESP_OK);
+ reboot(ids,3,77);assert(wc_store_load(&b,&migrated)==ESP_OK && b.volume==100 && b.reserved[0]==1 && b.cursor==1 && b.words[0].seen);
+ b.volume=65;assert(wc_store_save(&b)==ESP_OK);reboot(ids,3,77);assert(wc_store_load(&b,&migrated)==ESP_OK && b.volume==65);
  fail_set=1;assert(wc_store_save(&b)==ESP_FAIL);puts("wc_store: PASS");}

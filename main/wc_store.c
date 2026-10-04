@@ -28,7 +28,7 @@ esp_err_t wc_store_load(wc_state_t *s,bool *migrated){
   ok=true;for(unsigned i=0;i<s->count;i++)if(s->words[i].id!=b->data.words[i].id)ok=false;
   if(ok)*s=b->data;
  }else {ok=wc_migrate(s,&b->data);*migrated=ok;}
- if(ok){sequence=best;current_slot=slot;}
+ if(ok){wc_upgrade_defaults(s);sequence=best;current_slot=slot;}
  free(b);return ok?ESP_OK:ESP_ERR_INVALID_VERSION;
 }
 esp_err_t wc_store_save(const wc_state_t *s){

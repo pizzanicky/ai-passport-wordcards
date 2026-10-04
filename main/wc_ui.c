@@ -79,7 +79,7 @@ void wc_ui_render(const wc_state_t *s,wc_view_t *v){
  }else if(v->page==WC_SETTINGS){
   title("设置");const char *rows[]={"音量","重置学习记录","版本与词库"};for(int i=0;i<3;i++){int y=77+i*57;if(v->selection==i)box(screen,18,y,204,39,LIGHT,5);text(28,y+5,186,rows[i],20,INK);}
   snprintf(b,sizeof(b),"%u%%",s->volume);text(164,83,53,b,20,INK);text(20,240,200,"全部功能离线使用",16,DARK_TEAL);divider(282);text(49,289,172,"↑↓ 选择  OK 进入",16,INK);
- }else if(v->page==WC_VOLUME){title("发音音量");snprintf(b,sizeof(b),"%u%%",s->volume);text(70,108,130,b,30,INK);text(20,178,200,"↑ 增大  ↓ 减小",18,INK);text(20,222,200,"OK 保存并返回",18,INK);text(43,289,175,"长按 OK 返回首页",16,INK);
+ }else if(v->page==WC_VOLUME){title("声音音量");snprintf(b,sizeof(b),"%u%%",s->volume);text(70,108,130,b,30,INK);text(20,178,200,"↑ 增大  ↓ 减小",18,INK);text(20,222,200,"OK 保存并返回",18,INK);text(43,289,175,"长按 OK 返回首页",16,INK);
  }else if(v->page==WC_RESET){title("重置学习记录");text(20,83,200,"将清除全部学习进度。",18,INK);text(20,132,200,"词库和发音保持可用。",18,INK);main_action(198,"OK 确认清除",true);text(43,289,175,"长按 OK 取消返回",16,INK);
  }else if(v->page==WC_ABOUT){title("版本与词库");snprintf(b,sizeof(b),"版本 %s",esp_app_get_description()->version);text(20,80,200,b,16,INK);snprintf(b,sizeof(b),"高中词库 %u 词",s->count);text(20,121,200,b,18,INK);text(20,163,200,"英式发音 · 轮次复习",18,INK);text(20,207,200,"词库待发布审核",16,DARK_TEAL);text(43,289,175,"长按 OK 返回首页",16,INK);
  }else {title("需要处理");text(20,83,200,v->error?v->error:"操作未完成",18,INK);text(20,194,200,"OK 返回后重试",18,INK);text(43,289,175,"长按 OK 返回首页",16,INK);}

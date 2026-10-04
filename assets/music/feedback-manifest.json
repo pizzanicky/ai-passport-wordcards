@@ -1,0 +1,22 @@
+{
+  "sample_rate": 16000,
+  "channels": 1,
+  "bits": 16,
+  "origin": "original procedural chimes",
+  "sounds": {
+    "known": {
+      "seconds": 0.24,
+      "frames": 3840,
+      "peak": 12104,
+      "rms": 3867.3,
+      "sha256": "ef0216c8b77c8537961e8879231612180d9a2bc3fc4c27e182f6a8a2c73dccde"
+    },
+    "again": {
+      "seconds": 0.22,
+      "frames": 3520,
+      "peak": 12376,
+      "rms": 3755.1,
+      "sha256": "c5a0690a55293fbc9955a0f100d9454b76aec7c8501e9415f31d3c3742815c3c"
+    }
+  }
+}

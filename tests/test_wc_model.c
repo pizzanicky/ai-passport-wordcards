@@ -3,7 +3,7 @@
 #include <stdio.h>
 static wc_state_t s,old;
 int main(void){uint32_t ids[50];for(int i=0;i<50;i++)ids[i]=i+1;
- wc_init(&s,ids,50,123);assert(wc_valid(&s));assert(wc_start(&s));assert(s.length==5);assert(s.round==1);
+ wc_init(&s,ids,50,123);assert(wc_valid(&s));assert(s.volume==100 && s.reserved[0]==1);assert(wc_start(&s));assert(s.length==5);assert(s.round==1);
  assert(wc_rate(&s,true));assert(s.cursor==1 && s.round==1 && s.words[0].due==2);
  uint16_t queue=s.queue[1];assert(wc_start(&s));assert(s.cursor==1 && s.queue[1]==queue);
  for(int i=1;i<5;i++)assert(wc_rate(&s,false));assert(s.round==2);assert(wc_due_count(&s)==5);
