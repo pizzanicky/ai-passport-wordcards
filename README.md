@@ -5,6 +5,7 @@ An offline vocabulary application for FoloToy AI Passport. **Development preview
 - ESP32-C3, 8 MB flash, no PSRAM; 240×320 RGB565 rounded display.
 - Original character theme: ivory, wine red, mist aqua and indigo. Physical up/down/OK keys; no touch interaction.
 - 3,676 candidate high-school entries with IPA, parts of speech, Chinese definitions and locally generated UK voice audio. No network initialization or runtime TTS.
+- Definition-screen controls: OK = known, up = pronunciation, down = practice again. Long definitions use a separate reading state before rating.
 - Up to 20 unique cards per round, at most five new cards after due reviews. Successful reviews advance through 1/2/4/8/16-round intervals; retry schedules next round.
 - Two CRC-protected NVS snapshots, stable-ID corpus migration, explicit reset; no automatic erase on read errors.
 - Backlight sleeps after 60 seconds; first key wakes without rating a card.

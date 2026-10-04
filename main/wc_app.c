@@ -61,7 +61,7 @@ static void dispatch(bsp_btn_t b,bsp_btn_ev_t ev){
  case WC_SETTINGS:{unsigned max=2;if(up&&view.selection)view.selection--;if(down&&view.selection<max)view.selection++;
   if(ok){if(view.page==WC_HOME){if(view.selection==0){start_round();return;}go(view.selection==1?WC_PROGRESS:WC_SETTINGS);view.selection=0;}else {original_volume=state.volume;go(view.selection==0?WC_VOLUME:view.selection==1?WC_RESET:WC_ABOUT);}}break;}
  case WC_FRONT:if(up)play_word();if(ok)reveal();return;
- case WC_BACK:if(up)rate(true);else if(down)rate(false);else if(ok)play_word();return;
+ case WC_BACK:if(ok)rate(true);else if(down)rate(false);else if(up)play_word();return;
  case WC_READ:if(up&&view.read_page)view.read_page--;if(down&&view.read_page+1<view.read_pages)view.read_page++;if(ok){go(WC_BACK);return;}break;
  case WC_FINISH:if(ok)start_round();return;
  case WC_VOLUME:{if(up&&state.volume<100)state.volume+=5;if(down&&state.volume>=5)state.volume-=5;if(ok){if(persist())go(WC_SETTINGS);else state.volume=original_volume;return;}break;}
